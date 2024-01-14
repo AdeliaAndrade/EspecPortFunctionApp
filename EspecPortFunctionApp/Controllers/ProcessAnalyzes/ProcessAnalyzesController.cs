@@ -1,5 +1,4 @@
 ﻿using EspecPortFunctionApp.Dtos;
-using EspecPortFunctionApp.Services.Export;
 using EspecPortFunctionApp.Services.ProcessAnalyzes;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -13,12 +12,10 @@ namespace EspecPortFunctionApp.Controllers.ProcessAnalyzes
     {
         private readonly IConfiguration _configuration;
         private readonly IProcessAnalyzesService _processAnalyzesService;
-        private readonly IExportService _exportService;
-        public ProcessAnalyzesController(IConfiguration configuration, IProcessAnalyzesService processAnalyzesService, IExportService exportService)
+        public ProcessAnalyzesController(IConfiguration configuration, IProcessAnalyzesService processAnalyzesService)
         {
             _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
             _processAnalyzesService = processAnalyzesService ?? throw new ArgumentNullException(nameof(processAnalyzesService));
-            _exportService = exportService ?? throw new ArgumentNullException(nameof(exportService));
         }
 
         public ProcessAnalysesResultDto Process(ProcessAnalysesDto data)
@@ -26,11 +23,6 @@ namespace EspecPortFunctionApp.Controllers.ProcessAnalyzes
             var result = _processAnalyzesService.Process(data);
 
             return result;
-        }
-
-        public void ExportToWord(ExportValuesDto data)
-        {
-            _exportService.ExportToWord(data);
         }
     }
 }

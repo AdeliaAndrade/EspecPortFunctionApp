@@ -1,6 +1,5 @@
 ﻿using EspecPortFunctionApp;
 using EspecPortFunctionApp.Controllers.ProcessAnalyzes;
-using EspecPortFunctionApp.Services.Export;
 using EspecPortFunctionApp.Services.ProcessAnalyzes;
 using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -24,7 +23,6 @@ namespace EspecPortFunctionApp
 
             builder.Services.AddScoped<IProcessAnalyzesController, ProcessAnalyzesController>();
             builder.Services.AddScoped<IProcessAnalyzesService, ProcessAnalyzesService>();
-            builder.Services.AddScoped<IExportService, ExportService>();
 
             builder.Services.AddHttpContextAccessor();
 

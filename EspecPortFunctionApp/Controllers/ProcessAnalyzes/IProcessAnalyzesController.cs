@@ -9,7 +9,5 @@ namespace EspecPortFunctionApp.Controllers.ProcessAnalyzes
     public interface IProcessAnalyzesController
     {
         ProcessAnalysesResultDto Process(ProcessAnalysesDto data);
-
-        void ExportToWord(ExportValuesDto data);
     }
 }
