@@ -42,18 +42,18 @@ namespace EspecPortFunctionApp.Services.ProcessAnalyzes
             {
                 foreach(var process in data.ProcessAnalysesItems)
                 {
-                    var startValue = 50.0M;
+                    var startValue = 1070.0M;
 
                     if(process.Index >= 35 && process.Index <= 50)
                     {
-                        startValue = 5.7M;
+                        startValue = 60.0M;
                     }else if(process.Index >= 17 && process.Index <= 34)
                     {
-                        startValue = 7.4M;
+                        startValue = 225.0M;
                     }
                     else
                     {
-                        startValue = 50.0M;
+                        startValue = 1070.0M;
                     }
 
                     process.Transmittance = CalcTransmittance(process.Value, startValue);
@@ -62,17 +62,32 @@ namespace EspecPortFunctionApp.Services.ProcessAnalyzes
 
                 //663nm
                 var itemsFor663nm = data.ProcessAnalysesItems.FindAll(x => x.Index >= 35 && x.Index <= 50);
-                itemsFor663nm = itemsFor663nm.OrderByDescending(x => x.Absorbance).ToList().GetRange(1, 3);
+                var itemsFor663nmBackup = itemsFor663nm;
+                itemsFor663nm = itemsFor663nm.Where(x => x.Absorbance >= 0).OrderByDescending(x => x.Absorbance).ToList();
+                if (itemsFor663nm.Count < 3)
+                    itemsFor663nm = itemsFor663nmBackup.OrderByDescending(x => x.Absorbance).ToList();
+
+                itemsFor663nm = itemsFor663nm.GetRange(2, 3);
 
                 //647nm
                 var itemsFor647nm = data.ProcessAnalysesItems.FindAll(x => x.Index >= 17 && x.Index <= 34);
-                itemsFor647nm = itemsFor647nm.OrderByDescending(x => x.Absorbance).ToList().GetRange(1, 3);
+                var itemsFor647nmBackup = itemsFor647nm;
+                itemsFor647nm = itemsFor647nm.Where(x => x.Absorbance >= 0).OrderByDescending(x => x.Absorbance).ToList();
+                if (itemsFor647nm.Count < 3)
+                    itemsFor647nm = itemsFor647nmBackup.OrderByDescending(x => x.Absorbance).ToList();
+
+                itemsFor647nm = itemsFor647nm.GetRange(2, 3);
 
                 //470nm
                 var itemsFor470nm = data.ProcessAnalysesItems.FindAll(x => x.Index >= 1 && x.Index <= 16);
-                itemsFor470nm = itemsFor470nm.OrderByDescending(x => x.Absorbance).ToList().GetRange(0, 3);
+                var itemsFor470nmBackup = itemsFor470nm;
+                itemsFor470nm = itemsFor470nm.Where(x => x.Absorbance >= 0).OrderByDescending(x => x.Absorbance).ToList();
+                if (itemsFor470nm.Count < 3)
+                    itemsFor470nm = itemsFor470nmBackup.OrderByDescending(x => x.Absorbance).ToList();
 
-                for (int i = 0; i < 3; i++)
+                itemsFor470nm = itemsFor470nm.GetRange(2, 3);
+
+                for (int i = 0; i < 1; i++)
                 {
                     var transmittanceAt663nm = itemsFor663nm[i].Transmittance.Value;
                     var transmittanceAt647nm = itemsFor647nm[i].Transmittance.Value;
@@ -156,11 +171,29 @@ namespace EspecPortFunctionApp.Services.ProcessAnalyzes
         {
             decimal result = 0;
 
-            if (table.Any())
+            List<TableItemAnalyzeDto> tableBackup = new List<TableItemAnalyzeDto>(table);
+
+            if (tableBackup.Any())
             {
-                double average = (double)table.Average(x => x.R);
-                double sum = table.Sum(d => Math.Pow((double)(d.R) - average, 2));
-                result = (decimal)Math.Sqrt((sum) / table.Count());
+                //dados coletados do espectofotometro de referência
+                tableBackup.Add(new TableItemAnalyzeDto
+                {
+                    R = 4.541M
+                });
+
+                tableBackup.Add(new TableItemAnalyzeDto
+                {
+                    R = 4.567M
+                });
+
+                tableBackup.Add(new TableItemAnalyzeDto
+                {
+                    R = 4.591M
+                });
+
+                double average = (double)tableBackup.Average(x => x.R);
+                double sum = tableBackup.Sum(d => Math.Pow((double)(d.R) - average, 2));
+                result = (decimal)Math.Sqrt((sum) / tableBackup.Count());
             }
             return result;
         }
