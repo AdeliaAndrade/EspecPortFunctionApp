@@ -123,9 +123,9 @@ namespace EspecPortFunctionApp.Services.ProcessAnalyzes
                     if (absorbanceAt470nm < 0)
                         absorbanceAt470nm = absorbanceAt470nm * -1;
 
-                    var ca = (12.25M * absorbanceAt663nm) - (2.79M * absorbanceAt647nm);
-                    var cb = (21.5M * absorbanceAt647nm) - (5.1M * absorbanceAt663nm);
-                    var ct = ((1000M * absorbanceAt470nm) - (1.82M * ca) - (85.02M * cb)) / 198M;
+                    var ca = Math.Abs((12.25M * absorbanceAt663nm) - (2.79M * absorbanceAt647nm));
+                    var cb = Math.Abs((21.5M * absorbanceAt647nm) - (5.1M * absorbanceAt663nm));
+                    var ct = Math.Abs(((1000M * absorbanceAt470nm) - (1.82M * ca) - (85.02M * cb)) / 198M);
 
                     var item = new TableItemAnalyzeDto
                     {
@@ -221,7 +221,7 @@ namespace EspecPortFunctionApp.Services.ProcessAnalyzes
                 double sum = tableBackup.Sum(d => Math.Pow((double)(d.R) - average, 2));
                 result = (decimal)Math.Sqrt((sum) / tableBackup.Count());
             }
-            return result;
+            return Math .Round(result, 3);
         }
     }
 }
