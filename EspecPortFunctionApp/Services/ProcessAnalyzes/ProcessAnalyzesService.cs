@@ -94,8 +94,34 @@ namespace EspecPortFunctionApp.Services.ProcessAnalyzes
                     var transmittanceAt470nm = itemsFor470nm[i].Transmittance.Value;
 
                     var absorbanceAt663nm = itemsFor663nm[i].Absorbance.Value;
+                    if (absorbanceAt663nm < 0)
+                        absorbanceAt663nm = itemsFor663nm[i + 1].Absorbance.Value;
+
+                    if (absorbanceAt663nm < 0)
+                        absorbanceAt663nm = itemsFor663nm[i + 2].Absorbance.Value;
+
+                    if (absorbanceAt663nm < 0)
+                        absorbanceAt663nm = absorbanceAt663nm * -1;
+
                     var absorbanceAt647nm = itemsFor647nm[i].Absorbance.Value;
+                    if (absorbanceAt647nm < 0)
+                        absorbanceAt647nm = itemsFor647nm[i + 1].Absorbance.Value;
+
+                    if (absorbanceAt647nm < 0)
+                        absorbanceAt647nm = itemsFor647nm[i + 2].Absorbance.Value;
+
+                    if (absorbanceAt647nm < 0)
+                        absorbanceAt647nm = absorbanceAt647nm * -1;
+
                     var absorbanceAt470nm = itemsFor470nm[i].Absorbance.Value;
+                    if (absorbanceAt470nm < 0)
+                        absorbanceAt470nm = itemsFor470nm[i + 1].Absorbance.Value;
+
+                    if (absorbanceAt470nm < 0)
+                        absorbanceAt470nm = itemsFor470nm[i + 2].Absorbance.Value;
+
+                    if (absorbanceAt470nm < 0)
+                        absorbanceAt470nm = absorbanceAt470nm * -1;
 
                     var ca = (12.25M * absorbanceAt663nm) - (2.79M * absorbanceAt647nm);
                     var cb = (21.5M * absorbanceAt647nm) - (5.1M * absorbanceAt663nm);
