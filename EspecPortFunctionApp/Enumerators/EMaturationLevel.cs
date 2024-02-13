@@ -8,6 +8,7 @@ namespace EspecPortFunctionApp.Enumerators
     {
         Unripe = 0,
         Mature = 1,
-        Past = 2
+        Past = 2,
+        DeVez = 3
     }
 }

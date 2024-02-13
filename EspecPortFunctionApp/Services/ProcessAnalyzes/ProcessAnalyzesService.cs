@@ -40,6 +40,7 @@ namespace EspecPortFunctionApp.Services.ProcessAnalyzes
 
             if(data != null)
             {
+                var index = 0;
                 foreach(var process in data.ProcessAnalysesItems)
                 {
                     var startValue = 1070.0M;
@@ -56,8 +57,14 @@ namespace EspecPortFunctionApp.Services.ProcessAnalyzes
                         startValue = 1070.0M;
                     }
 
+                    if (process.Value <= 0 && (index - 1) >= 0)
+                        process.Value = data.ProcessAnalysesItems[index - 1].Value;
+                    else if ((index - 1) < 0 && process.Value <= 0)
+                        process.Value = 60.0M;
+
                     process.Transmittance = CalcTransmittance(process.Value, startValue);
                     process.Absorbance = CalcAbsorbance(process.Transmittance.Value);
+                    index++;
                 }
 
                 //663nm
@@ -161,12 +168,16 @@ namespace EspecPortFunctionApp.Services.ProcessAnalyzes
 
         private decimal CalcRatio(decimal value)
         {
-            return Math.Round(((value - 2.256M) / 0.277M), 3);
+            return Math.Round(((value - 4.215M) / 0.0381M), 3);
         }
 
         private EMaturationLevel ClassifyMaturation(decimal ratio)
         {
-            if(ratio < 13.5M)
+            if(ratio < 13.5M && ratio >= 6)
+            {
+                return EMaturationLevel.DeVez;
+            }
+            else if(ratio < 6)
             {
                 return EMaturationLevel.Unripe;
             }
